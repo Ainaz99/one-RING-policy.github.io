@@ -1,0 +1,6 @@
+{
+    "appName": "poliformer",
+    "contact": "khzeng",
+    "team": "prior",
+    "replicas": { "prod": 2 }
+}

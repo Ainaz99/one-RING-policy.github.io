@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description"
+          content="The .">
+    <meta name="keywords" content="The One RING: Cross-Embodiments, Embodied Navigation, Foundational Policy">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The One RING: a Robotic Indoor Navigation Generalist</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="icon" href="./static/images/favicon.svg">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+    <!-- Load MathJax -->
+    <script type="text/javascript" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    
+    <!-- MathJax Configuration -->
+    <script type="text/javascript">
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+            }
+        };
+    </script>
+
+</head>
+<body>
+
+<!--<nav class="navbar" role="navigation" aria-label="main navigation">-->
+<!--    <div class="navbar-brand">-->
+<!--        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">-->
+<!--            <span aria-hidden="true"></span>-->
+<!--            <span aria-hidden="true"></span>-->
+<!--            <span aria-hidden="true"></span>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</nav>-->
+
+<section class="hero is-dark">
+    <div class="hero-body">
+      <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+                    <h1 class="title is-3 publication-title">
+                        The One <span style="display: inline-flex; align-items: center;">
+                            RING <img src="./static/images/logo_ring_v2.png" alt="Ring Logo" style="height: 1em; margin-left: 0.3em;">
+                        </span> : a <u>R</u>obotic <u>I</u>ndoor <u>N</u>avigation <u>G</u>eneralist
+                    </h1>
+                    <div class="is-size-5 publication-authors">
+                        <span class="author-block">
+                            <span><a href="https://ainaz99.github.io/">Ainaz Eftekhar</a><sup>1,2</sup>, </span>
+                            <span><a href="https://lucaweihs.github.io//">Luca Weihs</a><sup>1</sup>, </span>
+                            <span><a href="https://rosehendrix.com/">Rose Hendrix</a><sup>1</sup>, </span>
+                            <span><a href="">Ege Caglar</a><sup>2</sup>, </span>
+                            <span><a href="https://scholar.google.de/citations?user=YuRVs2oAAAAJ&hl=en">Jordi Salvador</a><sup>1</sup>, </span>
+                            <br>
+                            
+                            <span><a href="https://scholar.google.de/citations?user=89Knd5YAAAAJ&hl=en">Alvaro Herrasti</a><sup>1</sup>, </span>
+                            <span><a href="https://winsonhan.com/about">Winson Han</a><sup>1</sup>, </span>
+                            <span><a href="https://scholar.google.com/citations?user=RQDywYwAAAAJ&hl=en">Eli VanderBilt</a><sup>1</sup> </span>
+                            <span><a href="https://anikem.github.io/">Aniruddha Kembhavi</a><sup>1,2</sup>, </span>
+                            <br>
+                            
+                            <span><a href="https://homes.cs.washington.edu/~ali//">Ali Farhadi</a><sup>1,2</sup>, </span>
+                            <span><a href="http://www.ranjaykrishna.com/index.html">Ranjay Krishna</a><sup>1,2</sup>, </span>
+                            <span><a href="https://ehsanik.github.io/">Kiana Ehsani</a><sup>1,†</sup>, </span>
+                            <span><a href="https://kuohaozeng.github.io//">Kuo-Hao Zeng</a><sup>1,†</sup> </span>
+                        </span>
+                    </div>
+                      <div class="is-size-5 publication-authors">
+                        <span class="author-block"><sup>†</sup>Equal Supervision</span>
+                        <br>
+                        <span class="author-block"><sup>1</sup>Allen Institute for AI,</span>
+                        <span class="author-block"><sup>2</sup>University of Washington</span>
+            
+                    </div>
+                    <div class="column has-text-centered">
+                        <span class="publication-links">
+                            <span class="link-block"><a target="_blank" href="static/files/RING_paper.pdf" class="external-link button is-normal is-rounded is-light"><span class="icon"><svg class="svg-inline--fa fa-file fa-w-12" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm160-14.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"></path></svg></span><span>Paper</span></a></span>
+                            <span class="link-block"><a target="_blank" href="static/files/RING_supplement.pdf" class="external-link button is-normal is-rounded is-light"><span class="icon"><i class="fas fa-file-pdf"></i></span><span>Supplement</span></a></span>
+                            <span class="link-block"><a target="_blank" href="" class="external-link button is-normal is-rounded is-light"><span class="icon"><svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" data-fa-i2svg=""><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></span><span>Code (coming soon)</span></a></span>
+                        <!-- <span class="link-block"><a target="_blank" href="https://youtu.be/fw2JBsmFc-4" class="external-link
+                                button is-normal is-rounded is-light"><span class="icon"><i class="fab fa-youtube"></i></span><span>Video</span></a></span>
+                        </span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<br>
+
+<section class="hero teaser">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="hero">
+            <br>
+            <h2 class="subtitle">
+                <strong>RING (<u>R</u>obotic <u>I</u>ndoor <u>N</u>avigation <u>G</u>eneralist)</strong> is an embodiment-agnostic policy, trained <i>solely in simulation</i> with diverse randomly initialized embodiments at scale (<strong>1 Million</strong> embodiments).
+                <br>
+                <br>
+                RING achieves robust performance on unseen robot platforms (Stretch RE-1, LoCoBot, Unitree’s Go1) in the real world, despite being trained exclusively in simulation <strong>without</strong> any direct exposure to real robot embodiments (see <a href="#numbers">Quantitative Results</a>).
+            </h2>
+            <img src="./static/images/main_fig.png"
+                 class="interpolation-image"
+                 alt="header-image."/>
+            <br>
+            <h2 class="subtitle">
+                We use simulation to randomly sample <strong>1 Million</strong> body configurations, varying the robot’s camera parameters, collider sizes, and center of rotation (see <a href="#RING">Embodiment Randomization at Scale</a>).
+                <br>
+                <br>
+                Coverying the space of possible embodiments allows RING to zero-shot generalize to unseen real-world robots with different body sizes and camera placements (see <a href="#Real-world examples">Real-World Qualitative Results</a>).
+                <br>
+                <br>
+                RING also shows embodiment-adaptive behavior, adapting its navigation strategy based on the embodiment (see <a href="#embodiment_adaptive_behavior">Embodiment-Adaptive Behavior</a>).
+            </h2>
+
+            <br>
+            <br>
+            <br>
+        </div>
+        <div class="content has-text-justified">
+            <h2 class="title is-3 has-text-centered">Website contents</h2>
+            <p>
+                This website contains a collection of qualitative examples and quantitative results of the <strong>RING</strong> policy in the
+                real-world and simulation. We also provide details about our data, training recipe, and model architecture.
+            </p>
+            <ul>
+                <li><a style="font-size: 1.5rem" href='#Real-world examples'>Real-world examples</a>
+                    <ul>
+                        <li><a href='#stretch_og_apple'>Find an apple (Stretch RE-1 with the factory config camera)</a></li>
+                        <li><a href='#stretch_mug'>Find a mug (Stretch RE-1 with the camera config used in SPOC)</a></li>
+                        <li><a href='#unitree_toilet'>Move to the toilet (Unitree GO1)</a></li>
+                        <li><a href='#locobot_basketball'>Find a basketball (LoCoBot)</a></li>
+                        <li><a href='#embodiment_adaptive'>Navigate to the trashcan (Stretch RE-1 goes around a dining table)</a></li>
+                        <li><a href='#embodiment_adaptive'>Navigate to the trashcan (Unitree GO1 navigates under a blocking dining table)</a></li>
+                        <li><a href='#fail_example'>Go To the sofa (Failure case: failure due to embodiment limitation of Unitree GO1)</a></li>
+                    </ul>
+                </li>
+                <li><a style="font-size: 1.5rem" href='#Human_evaluation'>Human Evaluation</a>
+                    <ul>
+                        <li><a href='#Human_evaluation_houseplant'>Find a houseplant</a></li>
+                        <li><a href='#Human_evaluation_apple'>Find an apple</a></li>
+                    </ul>
+                </li>
+                <li><a style="font-size: 1.5rem" href='#embodiment_adaptive_behavior'>Simulation examples show that <strong>RING</strong> adapts its behavior to different embodiments</a>
+                </li>
+                <li><a style="font-size: 1.5rem" href='#RING'>Details about our data, training recipe, and model architecture</a>
+                </li>
+                <li><a style="font-size: 1.5rem" href='#numbers'>Quantitative Results</a>
+                    <ul>
+                        <li><a href='#simulation_numbers'>In simulation benchmarks</a></li>
+                        <li><a href='#real_world_numbers'>In the real-world benchamrks</a></li>
+                        <li><a href='#human_eval_numbers'>Human evaluation experiment</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <br/>
+        </div>
+    </div>
+</section>
+
+<section class="section hero is-light">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="Real-world examples">Real-World Qualitative Results</h2>
+                <div class="content has-text-justified">
+                    <p>
+                        We evaluate RING directly on 4 unseen robots (Stretch-RE1, Stretch-RE1(factory config), LoCoBot, Unitree Go1) in a real-world apartment (layout shown below), without any further adaptation or real-world-specific finetuning.
+                        Here we present a trajectory for each robot embodiment. The agent's RGB input as
+                        well as a 3rd person perspective is shown for each example. All videos are sped up by up to 20x for ease
+                        of viewing.
+                    </p>
+                    <p>
+                        <strong>[We use black boxes to hide individuals' identities when they appear in the frame.]</strong>
+                    </p>
+                    <div style="text-align: center;">
+                        <img src="./static/images/real_world_layouts.png" class="interpolation-image" alt="floorplan" width="70%"/>
+                    </div>
+                    <h5 class="subtitle has-text-centered">
+                        Floorplan of the real-world environment and the starting locations for each robot.
+                    </h5>
+                </div>
+                <br>
+
+                <h3 class="title is-4" id="4_embodiment_examples">Four examples from 4 embodiments:</h3>
+                <h3 class="title is-5" id="stretch_og_apple">Stretch RE-1 (factory config camera): Find an apple.</h3>
+                <div class="content has-text-justified">
+                    <p>
+                        In this experiment, we use the original off-the-shelf camera equipped on the Stretch RE-1 (D435 with a vertical field of view of $69^{\circ}$ and resolution of $720 \times 1280$).
+                        <strong>RING</strong> effectively explores the room and finds the apple despite having a narrow field of view.
+                    </p>
+                </div>
+                <div class="content has-text-centered">
+                    <video
+                            controls
+                            muted
+                            preload
+                            playsinline
+                            width="100%">
+                        <source src="static/videos/real-world/corridor_apple_stretch_og.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <h3 class="title is-5" id="stretch_mug">Stretch RE-1 (camera config used in <a href="https://spoc-robot.github.io/" class="link-highlight">SPOC</a>): Find a mug.</h3>
+                <div class="content has-text-justified">
+                    <p>
+                        For this embodiment, following <a href="https://spoc-robot.github.io/" class="link-highlight">SPOC</a>, we use 2 Intel RealSense 455 fixed cameras, with a vertical field of view of $59^{\circ}$ and resolution of $1280 \times 720$.
+                        <strong>RING</strong> explores multiple rooms while avoiding obstacles to find the mug.
+                    </p>
+                </div>
+                <div class="content has-text-centered">
+                    <video
+                            controls
+                            muted
+                            preload
+                            playsinline
+                            width="100%">
+                        <source src="static/videos/real-world/bedroom_mug_stretch.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+
+                <h3 class="title is-5" id="unitree_toilet">Unitree Go1: Move to the toilet.</h3>
+                <div class="content has-text-justified">
+                    <p>
+                        We use Unitree Go1 as another embodiment with lower height.
+                        The robot navigates to the toilet from the living room.
+                        Please note that our low-level controller is not perfect, causing the robot to drift to left when moving forward.
+                        Despite this limitation, <strong>RING</strong> shows robustness by correcting the robot's trajectory using <tt>RotateRight</tt> actions.
+                    </p>
+                </div>
+                <div class="content has-text-centered">
+                    <video
+                            controls
+                            muted
+                            preload
+                            playsinline
+                            width="100%">
+                        <source src="static/videos/real-world/livingroom_toilet_unitree.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <h3 class="title is-5" id="locobot_basketball">LoCoBot: Find a basketball.</h3>
+                <div class="content has-text-justified">
+                    <p>
+                        The robot starts in a bedroom with 3 full 360 degree rotations to scan the room.
+                        It then navigates to the corridor and finds the basketball.
+                        The exhaustive exploration of the bedroom is due to the bias in simulation where the basketball is often placed in the bedroom.
+                    </p>
+                </div>
+                <div class="content has-text-centered">
+                    <video
+                            controls
+                            muted
+                            preload
+                            playsinline
+                            width="100%">
+                        <source src="static/videos/real-world/bedroom_basketball_locobot.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <br><br>
+
+                <h3 class="title is-4" id="embodiment_adaptive">Embodiment-Adaptive Behavior.</h3>
+                <h3 class="title is-5" id="trashcan_table">Stretch RE-1 & Unitree Go1: Navigate to the trashcan.</h3>
+                <div class="content has-text-justified">
+                    <p>
+                        Both robots go to the kitchen to find the trashcan.
+                        In the left video, Stretch goes around the table in the corridor to avoid collisions.
+                        In the right video, when the table completely blocks the way, <strong>RING</strong> controls the Go1 robot to walk under the table because of its lower height.
+                    </p>
+                </div>
+                <div class="grid-container-two-no-border">
+
+                    <video
+                        controls
+                        muted
+                        preload
+                        playsinline
+                        width="100%"
+                        autoplay
+                        loop>
+                        <source src="static/videos/real-world/livingroom_trashcan_stretch.mp4" type="video/mp4">
+                    </video>
+        
+                    <video
+                        controls
+                        muted
+                        preload
+                        playsinline
+                        width="100%"
+                        autoplay
+                        loop>
+                        <source src="static/videos/real-world/trashcan_table_unitree.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <br><br>
+
+                <h3 class="title is-4" id="fail_example">Failure due to embodiment limitation.</h3>
+                <h3 class="title is-5" id="unitree_sofa_fail">Unitree Go1: Go to the sofa (Failed).</h3>
+                <div class="content has-text-justified">
+                    <p>
+                        This example shows a failure example due to an embodiment limitation. 
+                        The Go1 robot has a low camera placement with a limited field of view.
+                        This results in incorrectly identifying a leather bench at the foot of the bed as a sofa. 
+                        (Please refer to the robot's first-person view to observe the recognition error.)
+                    </p>
+                </div>
+                <div class="content has-text-centered">
+                    <video
+                            controls
+                            muted
+                            preload
+                            playsinline
+                            width="100%">
+                        <source src="static/videos/real-world/kitchen_sofa_unitree_wrong.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section hero">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="Human_evaluation">Human Evaluation</h2>
+
+                <p>
+                    To further show RING's generalization capability to novel embodiments, we evaluate it as a navigation assistant with humans as new, unseen embodiments.
+                    We asked 5 participants to navigate in a real-world kitchen area, following the policy’s output actions on their phones.
+                    Each individual has unique characteristics, including step size, height, rotation angles, and camera-holding posture. Each person navigates to three different objects (Mug, Apple, Houseplant), resulting in a total of 15 trajectories.
+                    <br>
+                    <br>
+                    Below we show two qualitative trajectories navigated by two participants using <strong>RING</strong>.
+                </p>
+                <br>
+
+                <p class="center-text" id="Human_evaluation_houseplant">Find a houseplant.</p>
+                <div class="content has-text-centered"
+                    style="display: flex; align-items: center; justify-content: center;gap: 20px;">
+                    <img src="./static/images/houseplant_map.png"
+                        alt="ArchitecTHOR Image" width="26%"> <!-- Adjust the width as needed -->
+                    <video
+                        controls
+                        muted
+                        preload
+                        playsinline
+                        width="50%"> <!-- Adjust the width as needed -->
+                        <source src="./static/videos/human_eval/houseplant.mp4"
+                                type="video/mp4">
+                    </video>
+                    
+                </div>
+
+                <p class="center-text" id="Human_evaluation_apple">Find an apple.</p>
+                <div class="content has-text-centered"
+                    style="display: flex; align-items: center; justify-content: center;gap: 20px;">
+                    <img src="./static/images/apple_map.png"
+                        alt="ArchitecTHOR Image" width="26%"> <!-- Adjust the width as needed -->
+                    <video
+                        controls
+                        muted
+                        preload
+                        playsinline
+                        width="50%"> <!-- Adjust the width as needed -->
+                        <source src="./static/videos/human_eval/apple.mp4"
+                                type="video/mp4">
+                    </video>
+                    
+                </div>
+
+                
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="section hero is-light">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="embodiment_adaptive_behavior">RING has Embodiment-Adaptive Behavior</h2>
+
+                <p>
+                    The <strong>RING</strong> policy shows embodiment-adaptive behavior.
+                    In the simulation, both Stretch RE-1 and Unitree A1 start from the same pose behind the bed. The quadruped robot directly moves under the bed because of its lower height, while the Stretch RE-1 bypasses it.
+                    <br>
+                    <br>
+                    Then, our third agent matches the Stretch RE-1’s height but has a camera positioned as low as the quadruped’s. Initially, it assumes a lower height and attempts to go under the bed, but after colliding, it adjusts to maneuver around the bed, similar to the Stretch RE-1.
+                </p>
+                <br>
+
+                <div class="content has-text-centered"
+                        style="display: flex; align-items: center; justify-content: center;gap: 20px;">
+                    <img src="./static/images/stretch_RE.png"
+                        alt="ArchitecTHOR Image" width="12%"> <!-- Adjust the width as needed -->
+                    <img src="./static/images/bed_stretch_map.png"
+                        alt="ArchitecTHOR Image" width="30%"> <!-- Adjust the width as needed -->
+                    <video
+                        controls
+                        muted
+                        preload
+                        playsinline
+                        width="46%"> <!-- Adjust the width as needed -->
+                        <source src="./static/videos/sim/bed_stretch_cropped.mp4"
+                                type="video/mp4">
+                    </video>
+                    
+                </div>
+
+                <div class="content has-text-centered"
+                    style="display: flex; align-items: center; justify-content: center;gap: 20px;">
+                <img src="./static/images/unitree_A1.png"
+                    alt="ArchitecTHOR Image" width="12%"> <!-- Adjust the width as needed -->
+                <img src="./static/images/bed_unitree_map.png"
+                        alt="ArchitecTHOR Image" width="30%"> <!-- Adjust the width as needed -->
+                <video
+                    controls
+                    muted
+                    preload
+                    playsinline
+                    width="46%"> <!-- Adjust the width as needed -->
+                    <source src="./static/videos/sim/bed_unitree_cropped.mp4"
+                            type="video/mp4">
+                </video>
+            </div>
+
+            <div class="content has-text-centered"
+                    style="display: flex; align-items: center; justify-content: center;gap: 20px;">
+                <img src="./static/images/stretch_low_cam.png"
+                    alt="ArchitecTHOR Image" width="12%"> <!-- Adjust the width as needed -->
+                <img src="./static/images/bed_stretch_low_cam_map.png"
+                    alt="ArchitecTHOR Image" width="30%"> <!-- Adjust the width as needed -->
+                <video
+                        controls
+                        muted
+                        preload
+                        playsinline
+                        width="46%"> <!-- Adjust the width as needed -->
+                    <source src="./static/videos/sim/bed_stretch_low_cam_cropped.mp4"
+                            type="video/mp4">
+                </video>
+                
+            </div>
+
+                <p>
+                    This shows <strong>RING</strong> implicitly infers embodiment parameters from visual observations and transition dynamics, dynamically adjusting its navigation strategy accordingly.
+                    It does not have access to any privileged information about its current body. This embodiment-adaptive navigation strategy adjustment is an interesting emergent behavior that would not have been possible without training across the exhaustive space of embodiments at scale.
+                </p>
+
+                
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section hero">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+
+            <h2 class="title is-3 has-text-centered" id="RING">RING (<u>R</u>obotic <u>I</u>ndoor <u>N</u>avigation <u>G</u>eneralist)</h2>
+
+        <p style="text-align: justify;">
+            With the growing diversity of robots used in real-world applications, there remains a need for a policy that can operate a wide range of embodiments and transfer, in a zero- or few-shot manner, to novel robots.
+            We introduce <strong>RING</strong>, a generalist policy for indoor visual navigation that learns from a broad spectrum of embodiments, <i>trained exclusively in simulation, without any direct use of actual robot embodiments</i>. 
+        </p>
+        <br>
+        
+
+        <h3 class="title is-4">Embodiment Randomization at Scale</h3>
+        <p style="text-align: justify;">
+            We augment the AI2-THOR simulator with the ability to instantiate robot embodiments with controllable configurations, varying across <i>body size</i>, <i>rotation pivot point</i>, and <i>camera configurations</i>.
+            We model the body of the agent as an invisible collider box in the AI2-THOR simulator. Each agent can have 1 or 2 RGB cameras placed at a random pose within the collider box. 
+            Parameters corresponding to both the body and the cameras are sampled randomly from specified ranges. 
+            We also modify the planner of generating expert trajectories to account for the diversity of embodiments.
+        </p>
+        <br>
+        <p style="text-align: justify;"></p>
+            Below, we show example trajectories from random embodiments in the AI2-THOR simulator.
+            Right column shows the egocentric view from the main camera and the left column shows a third-person view of the agent --white boxes indicate the robot colliders for visualization purposes only.
+        </p>
+        <br>
+    
+        <div class="grid-container-two-no-border">
+
+            <video
+                controls
+                muted
+                preload
+                playsinline
+                width="100%"
+                autoplay
+                loop>
+                <source src="static/videos/sim/camera_follow.mp4" type="video/mp4">
+            </video>
+
+            <video
+                controls
+                muted
+                preload
+                playsinline
+                width="100%"
+                autoplay
+                loop>
+                <source src="static/videos/sim/egocentric.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <br>
+        <p style="text-align: justify;"></p>
+         <strong>Different embodiments show different behaviors.</strong> 
+            Below we show 2 examples of the same trajectory with different embodiments.
+            For each example, the left frame shows the egocentric view from the main camera and the second one a third-person view of the agent. 
+            Embodiment A, on the left, has a bigger body size compared to Embodiment B (on the right). As a result, B can go under the table to get to the chair but A collides with the table and has to go around.</p> 
+
+
+        <br>
+        <div class="content has-text-centered" style="display: flex; justify-content: center; gap: 5px;">
+            <video
+                    controls
+                    muted
+                    preload
+                    playsinline
+                    width="50%"
+                    autoplay
+                    loop>
+                <source src="static/videos/sim/ghost_tall.mp4" type="video/mp4">
+            </video>
+            <video
+                    controls
+                    muted
+                    preload
+                    playsinline
+                    width="50%"
+                    autoplay
+                    loop>
+                <source src="static/videos/sim/ghost_short.mp4" type="video/mp4">
+            </video>
+        </div>
+
+            
+            <br>
+            <h3 class="title is-4">Training Paradigm and Architecture</h3>
+            <p style="text-align: justify;">
+                We first pretrain our policy on expert trajectories collected from randomized embodiments, followed
+                by finetuning with on-policy RL, using the randomized embodiments in the AI2-THOR simulator.
+                RL finetuning is specifically important for the policy to learn to navigate a diverse set of embodiments through trial-and-error.
+                Architecture is outlined in the figure below.
+
+            </p>
+            <br>
+            <p style="text-align: justify;"></p>
+            <strong>RING Architecture.</strong>
+            RING accepts visual observations and a language instruction as inputs and predicts an action to execute. 
+            During RL finetuning, RING also predicts a value estimate. We mask the image from the $2^{nd}$ camera with all $0$ for the embodiments with only one camera, such as LoCoBot and Unitree Go1. More specifically, we use the Vision Transformer and the Text Encoder from SIGLIP-ViT-B/16 as our visual encoder and goal encoder. After encoding, we compress and project the visual representation $r$ and text embedding $t$ to $v$ and $g$, respectively, with the desired dimension $d=512$. Next, the Transformer State Encoder encodes $v$, $g$, along with STATE token embedding $f$ into a state feature vector $s$. The Causal Transformer Decoder further processes $s$, along with previous experiences stored in the KV-Cache, to produce the state belief $b$. Finally, the Linear Actor-Critic Head predicts action logits (and, during RL finetuning, a value estimate) from $b$.
+
+            </p>
+            <br>
+    
+            <div class="content">
+                <div class="grid-container-one">
+                    <div class="grid-item">
+                        <img src="static/images/model_details.jpeg" alt="Image" width="400px">
+                    </div>
+    
+    
+                </div>
+    
+            </div>
+        
+        
+        <br>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section hero is-light">
+    <div class="container is-max-desktop" style="max-width: 1200px;">
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <h2 class="title is-3 has-text-centered" id="numbers">Quantitative Results</h2>
+                <p>
+                    Our experiments show that <strong>RING</strong> operates effectively across a wide range of embodiments, including actual robots (<i>Stretch RE-1, LoCoBot </i>, and <i>Unitree Go1</i>) and human evaluation with <i>Navigation Assistants</i>, despite being trained exclusively in simulation <strong>without</strong> any direct exposure to real robot embodiments.
+                </p>
+                <br>
+                <h3 class="title is-4" id="simulation_numbers">In Simulation</h3>
+                <p style="text-align: justify;">
+                    We perform zero-shot evaluate of all policies on four robot embodiments: Stretch RE-1 (with 1 or 2 cameras), LoCoBot, and Unitree A1 in simulation.
+                    <strong>RING</strong> shows strong generalization across all embodiments despite not being trained on any of them, achieving an average absolute improvement of <strong>16.7%</strong> in Success Rate.
+                </p>
+                <br>
+                <p>
+                <div class="grid-container-one">
+                    <div class="grid-item">
+
+                        <img src="static/images/Zero-Shot Cross-Embodiment Transfer.png" alt="Image">
+                    </div>
+                </div>
+
+                <br>
+                <h3 class="title is-4" id="real_world_numbers">In the Real World</h3>
+                <p style="text-align: justify;">
+                    <strong>RING</strong> transfers zero-shot to the real-world without any finetuning. <span style="color: gray;">Gray</span> numbers are evaluated on same embodiment as their training. 
+                    RING shows consistent performance across all embodiments achieving <strong>78.9%</strong> success rate on average across $4$ real-world robots.
+                </p>
+                <br>
+                <div class="grid-container-one">
+
+                    <div class="grid-item">
+
+                        <img src="static/images/real_world_results.png" alt="Image" style="width: 100%; max-width: 800px;">
+
+                    </div>
+
+                </div>
+
+                <br>
+                <h3 class="title is-4" id="human_eval_numbers">Human Evaluation</h3>
+                <p style="text-align: justify;">
+                    We asked 5 participants to navigate in a real-world kitchen area, following the policy’s output actions on their phones. 
+                    Each individual has unique characteristics, including <i>step size, height, rotation angles</i>, and <i>camera-holding posture</i>. 
+                    Each person navigates to three different objects (<i>Mug, Apple, Houseplant</i>), resulting in a total of $15$ trajectories.
+                    <strong>RING</strong> shows much better generalization to human embodiment than the <a href="https://robot-flare.github.io/" class="link-highlight">FLaRe</a> baseline trained on Stretch RE-1.
+                </p>
+                <br>
+                <div class="grid-container-one">
+
+                    <div class="grid-item">
+
+                        <img src="static/images/human_eval_results.png" alt="Image" style="width: 100%; max-width: 800px;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer" style="background-color: #f5f5f5">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8">
+                <div class="content">
+                    <p>
+                        This website based on the <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA
+                        4.0</a> licensed
+                        <a rel="template" href="https://github.com/nerfies/nerfies.github.io">Nerfies website</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
